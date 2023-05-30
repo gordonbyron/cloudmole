@@ -1,6 +1,8 @@
 package org.cloudmole.inspector.database;
 
+import org.cloudmole.inspector.generic.CloudServiceFactory;
 import org.cloudmole.inspector.generic.database.DatabaseInspector;
+import org.cloudmole.inspector.model.CloudService;
 import org.cloudmole.inspector.model.Database;
 import software.amazon.awssdk.auth.credentials.ProfileCredentialsProvider;
 import software.amazon.awssdk.regions.Region;
@@ -14,17 +16,12 @@ import java.util.Set;
 
 public class AWSDatabaseInspector implements DatabaseInspector {
     @Override
-    public void execute() {
-
-    }
-
-    @Override
-    public Set<Database> findDatabases() {
+    public List<Database> execute(CloudService cloudService) {
         try (RdsClient rdsClient = RdsClient.builder()
-                .region(Region.US_WEST_2)
-                .credentialsProvider(ProfileCredentialsProvider.create("codemole"))
+                .region(Region.of(cloudService.region()))
+                .credentialsProvider(ProfileCredentialsProvider.create(cloudService.profile()))
                 .build()) {
-            
+
             try {
                 DescribeDbInstancesResponse response = rdsClient.describeDBInstances();
                 List<DBInstance> instanceList = response.dbInstances();
@@ -40,7 +37,7 @@ public class AWSDatabaseInspector implements DatabaseInspector {
             }
         }
 
-
         return null;
     }
+
 }

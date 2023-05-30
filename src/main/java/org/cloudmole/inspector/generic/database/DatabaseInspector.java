@@ -5,6 +5,5 @@ import org.cloudmole.inspector.model.Database;
 
 import java.util.Set;
 
-public interface DatabaseInspector extends CloudInspector {
-    public Set<Database> findDatabases();
+public interface DatabaseInspector extends CloudInspector<Database> {
 }
